@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siomay Padjajaran - No 1 di Majalengka</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Bungee & Poppins untuk gaya Komik/Pop Art -->
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        comicYellow: '#FFDE03',
+                        comicOrange: '#FF7000',
+                        comicBrown: '#8B4513',
+                        comicDark: '#1A1A1A',
+                        comicRed: '#FF2E2E',
+                        peanutCream: '#FDEBD0',
+                    },
+                    fontFamily: {
+                        bungee: ['Bungee', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'comic': '4px 4px 0px #1A1A1A',
+                        'comic-lg': '8px 8px 0px #1A1A1A',
+                        'comic-sm': '2px 2px 0px #1A1A1A',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFF9E6;
+            background-image: radial-gradient(#FFDE03 15%, transparent 16%), radial-gradient(#FF7000 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        .comic-title {
+            font-family: 'Bungee', cursive;
+            text-shadow: 2px 2px 0px #1A1A1A, 4px 4px 0px #FF7000;
+        }
+        .comic-card {
+            border: 4px solid #1A1A1A;
+            box-shadow: 6px 6px 0px #1A1A1A;
+            transition: all 0.1s ease-in-out;
+        }
+        .comic-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #1A1A1A;
+        }
+        .comic-card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #1A1A1A;
+        }
+        .comic-btn {
+            border: 3px solid #1A1A1A;
+            box-shadow: 4px 4px 0px #1A1A1A;
+            font-family: 'Bungee', cursive;
+            transition: all 0.08s ease;
+        }
+        .comic-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #1A1A1A;
+        }
+        .comic-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #1A1A1A;
+        }
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 3s linear infinite;
+        }
+        /* Struk Belanja Gaya Struk Thermal / Alfamart */
+        .thermal-receipt {
+            font-family: 'Courier New', Courier, monospace;
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 2px dashed #1a1a1a;
+        }
+    </style>
+</head>
+<body class="text-comicDark antialiased min-h-screen flex flex-col">
+
+    <!-- 1. ANIMASI LOADING PERTAMA KALI KETIKA BUKA WEB -->
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-comicYellow flex flex-col items-center justify-center transition-opacity duration-500 px-4">
+        <div class="relative mb-6">
+            <div class="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 bg-comicOrange rounded-full border-4 border-comicDark flex items-center justify-center shadow-comic-lg animate-spin-slow">
+                <img src="https://i.ibb.co.com/svdcTQsL/erasebg-transformed.png" alt="Logo Siomay" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -top-4 -right-4 bg-comicRed text-white font-bungee px-3 py-1 text-xs border-2 border-comicDark rotate-12 shadow-comic-sm">
+                MANTAP!
+            </div>
+        </div>
+        <h1 class="comic-title text-2xl sm:text-3xl md:text-5xl text-comicDark text-center px-2 mb-2">SIOMAY PADJAJARAN</h1>
+        <p class="font-bungee text-xs sm:text-sm md:text-lg text-comicBrown tracking-wider text-center animate-pulse">MEMUAT KELEZATAN...</p>
+    </div>
+
+    <!-- NOTIFIKASI TOAST MELAYANG -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-200%] transition-transform duration-300 bg-comicYellow border-4 border-comicDark px-4 py-2 sm:px-6 sm:py-3 shadow-comic font-bold flex items-center gap-3 text-xs sm:text-sm">
+        <span id="toast-icon" class="text-xl sm:text-2xl">🔥</span>
+        <span id="toast-msg">Berhasil ditambahkan!</span>
+    </div>
+
+    <!-- HEADER / LOBBY UTAMA -->
+    <header class="bg-comicYellow border-b-4 border-comicDark sticky top-0 z-30 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-comicOrange rounded-full border-3 border-comicDark flex items-center justify-center shadow-comic-sm">
+                    <img src="https://i.ibb.co.com/svdcTQsL/erasebg-transformed.png" alt="Logo Siomay" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="comic-title text-sm sm:text-lg md:text-2xl leading-tight">SIOMAY PADJAJARAN</h1>
+                    <p class="text-[10px] sm:text-xs font-bold text-comicBrown uppercase tracking-wider">No 1 di Majalengka</p>
+                </div>
+            </div>
+            
+            <!-- Tombol Keranjang Pesanan -->
+            <button onclick="openCartModal()" class="comic-btn bg-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl flex items-center gap-2 text-xs sm:text-sm md:text-base">
+                <i class="fa-solid fa-cart-shopping text-comicOrange text-base sm:text-lg"></i>
+                <span class="font-bungee hidden sm:inline">Keranjang</span>
+                <span id="cart-badge" class="bg-comicRed text-white text-[10px] sm:text-xs font-bungee px-1.5 sm:px-2 py-0.5 rounded-full border-2 border-comicDark">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- BANNER UTAMA -->
+    <section class="max-w-6xl mx-auto px-4 py-6 md:py-10 w-full">
+        <div class="bg-peanutCream border-4 border-comicDark rounded-2xl p-5 sm:p-8 md:p-10 shadow-comic-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="absolute -right-10 -bottom-10 text-9xl opacity-10 select-none pointer-events-none">🥟</div>
+            <div class="z-10 text-center md:text-left">
+                <span class="bg-comicRed text-white font-bungee text-[10px] sm:text-xs px-3 py-1 border-2 border-comicDark inline-block mb-3 rotate-[-2deg] shadow-comic-sm">
+                    100% IKAN TENGGIRI ASLI!
+                </span>
+                <h2 class="comic-title text-xl sm:text-3xl md:text-4xl text-comicDark mb-3">PILIH PORSI SIOMAY FAVORITMU!</h2>
+                <p class="text-xs sm:text-sm md:text-base font-semibold text-comicBrown max-w-xl">
+                    Siomay lezat berpadu bumbu kacang khas pedas gurih. Silakan pilih salah satu katalog porsi harga di bawah untuk kustomisasi isi menu!
+                </p>
+            </div>
+            <div class="z-10 flex-shrink-0">
+                <div class="w-28 h-28 sm:w-36 sm:h-36 bg-comicYellow border-4 border-comicDark rounded-2xl shadow-comic flex items-center justify-center rotate-6">
+                    <img src="https://i.ibb.co.com/svdcTQsL/erasebg-transformed.png" alt="Logo Siomay" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KATALOG PILIHAN HARGA (4 CARD: 5K, 8K, 10K, 15K) -->
+    <main class="max-w-6xl mx-auto px-4 pb-16 flex-grow w-full">
+        <div class="flex items-center gap-2 mb-6">
+            <span class="text-2xl">⚡</span>
+            <h3 class="comic-title text-lg sm:text-xl md:text-2xl">KATALOG PILIHAN HARGA</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- CARD 1: 5K -->
+            <div onclick="openCustomModal(5000, 'Porsi Kecil')" class="comic-card bg-white rounded-xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
+                <div>
+                    <div class="w-full h-32 sm:h-36 bg-comicYellow/30 border-3 border-comicDark rounded-lg mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-comicYellow/50 transition-colors">
+                        <img src="https://i.ibb.co.com/RkrMRHFX/Whats-App-Image-2026-11-02-at-16-26-14.jpg" alt="Logo Siomay" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-comicOrange text-white text-xs font-bungee px-2 py-1 border-2 border-comicDark">
+                            5K
+                        </div>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-comicBrown uppercase bg-comicYellow/50 px-2 py-0.5 rounded border border-comicDark">Hemat</span>
+                    <h4 class="font-bungee text-base sm:text-lg mt-1 text-comicDark">Porsi Kecil</h4>
+                    <p class="text-xs text-gray-600 mt-1">Cocok untuk mengganjal perut lapar santai.</p>
+                </div>
+                <div class="mt-4 sm:mt-5 pt-3 border-t-2 border-comicDark flex items-center justify-between">
+                    <span class="font-bungee text-comicOrange text-base sm:text-lg">Rp 5.000</span>
+                    <button class="comic-btn bg-comicYellow px-3 py-1.5 text-xs rounded-lg">PILIH <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <!-- CARD 2: 8K -->
+            <div onclick="openCustomModal(8000, 'Porsi Sedang')" class="comic-card bg-white rounded-xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
+                <div>
+                    <div class="w-full h-32 sm:h-36 bg-orange-100 border-3 border-comicDark rounded-lg mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-orange-200 transition-colors">
+                        <img src="https://i.ibb.co.com/zYbWFRP/Whats-App-Image-2026-11-02-at-16-23-37.jpg" alt="Logo Siomay" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-comicRed text-white text-xs font-bungee px-2 py-1 border-2 border-comicDark">
+                            8K
+                        </div>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-comicRed uppercase bg-orange-100 px-2 py-0.5 rounded border border-comicDark">Bisa Telur!</span>
+                    <h4 class="font-bungee text-base sm:text-lg mt-1 text-comicDark">Porsi Sedang</h4>
+                    <p class="text-xs text-gray-600 mt-1">Porsi pas dan mengenyangkan untuk harian.</p>
+                </div>
+                <div class="mt-4 sm:mt-5 pt-3 border-t-2 border-comicDark flex items-center justify-between">
+                    <span class="font-bungee text-comicOrange text-base sm:text-lg">Rp 8.000</span>
+                    <button class="comic-btn bg-comicYellow px-3 py-1.5 text-xs rounded-lg">PILIH <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <!-- CARD 3: 10K -->
+            <div onclick="openCustomModal(10000, 'Porsi Besar')" class="comic-card bg-white rounded-xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
+                <div>
+                    <div class="w-full h-32 sm:h-36 bg-amber-100 border-3 border-comicDark rounded-lg mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-amber-200 transition-colors">
+                        <img src="https://i.ibb.co.com/zYbWFRP/Whats-App-Image-2026-11-02-at-16-23-37.jpg" alt="Logo Siomay" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-comicOrange text-white text-xs font-bungee px-2 py-1 border-2 border-comicDark">
+                            10K
+                        </div>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-comicRed uppercase bg-amber-100 px-2 py-0.5 rounded border border-comicDark">Favorit!</span>
+                    <h4 class="font-bungee text-base sm:text-lg mt-1 text-comicDark">Porsi Besar</h4>
+                    <p class="text-xs text-gray-600 mt-1">Lebih puas dengan aneka isian lebih banyak.</p>
+                </div>
+                <div class="mt-4 sm:mt-5 pt-3 border-t-2 border-comicDark flex items-center justify-between">
+                    <span class="font-bungee text-comicOrange text-base sm:text-lg">Rp 10.000</span>
+                    <button class="comic-btn bg-comicYellow px-3 py-1.5 text-xs rounded-lg">PILIH <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+            <!-- CARD 4: 15K -->
+            <div onclick="openCustomModal(15000, 'Porsi Jumbo')" class="comic-card bg-white rounded-xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
+                <div>
+                    <div class="w-full h-32 sm:h-36 bg-yellow-100 border-3 border-comicDark rounded-lg mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-yellow-200 transition-colors">
+                        <img src="https://i.ibb.co.com/zYbWFRP/Whats-App-Image-2026-11-02-at-16-23-37.jpg" alt="Logo Siomay" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-comicRed text-white text-xs font-bungee px-2 py-1 border-2 border-comicDark">
+                            15K
+                        </div>
+                    </div>
+                    <span class="text-[10px] sm:text-xs font-bold text-comicRed uppercase bg-yellow-100 px-2 py-0.5 rounded border border-comicDark">Jumbo Lengkap!</span>
+                    <h4 class="font-bungee text-base sm:text-lg mt-1 text-comicDark">Porsi Jumbo</h4>
+                    <p class="text-xs text-gray-600 mt-1">Porsi sultan super kenyang atau buat sharing.</p>
+                </div>
+                <div class="mt-4 sm:mt-5 pt-3 border-t-2 border-comicDark flex items-center justify-between">
+                    <span class="font-bungee text-comicOrange text-base sm:text-lg">Rp 15.000</span>
+                    <button class="comic-btn bg-comicYellow px-3 py-1.5 text-xs rounded-lg">PILIH <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-comicDark text-white py-8 border-t-4 border-comicYellow mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="comic-title text-lg sm:text-xl text-comicYellow mb-2">SIOMAY PADJAJARAN</h2>
+            <p class="text-xs text-gray-300 font-semibold mb-4">Nikmati kelezatan siomay autentik setiap hari langsung dari gerobak andalan kami.</p>
+            <p class="text-xs text-gray-400">&copy; 2026 Siomay Padjajaran. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+
+    <!-- ================= MODAL KUSTOMISASI MENU ================= -->
+    <div id="custom-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="comic-card bg-white rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 my-auto relative animate-fadeIn">
+            
+            <!-- Tombol Tutup Modal -->
+            <button onclick="closeCustomModal()" class="absolute top-4 right-4 w-9 h-9 bg-comicRed text-white rounded-lg border-2 border-comicDark flex items-center justify-center font-bungee text-lg shadow-comic-sm hover:bg-red-600">
+                &times;
+            </button>
+
+            <div class="mb-4 pb-3 border-b-2 border-comicDark">
+                <span id="modal-porsi-badge" class="bg-comicYellow text-comicDark text-xs font-bungee px-2.5 py-1 border-2 border-comicDark inline-block mb-1">PORSI KECIL</span>
+                <h3 id="modal-title" class="comic-title text-lg sm:text-xl text-comicDark">Kustomisasi Pesanan</h3>
+                <p id="modal-price-desc" class="text-xs sm:text-sm font-bold text-comicOrange mt-0.5">Harga: Rp 5.000</p>
+            </div>
+
+            <!-- FORM KUSTOMISASI PESANAN -->
+            <form id="custom-form" onsubmit="event.preventDefault();" class="space-y-5 text-xs sm:text-sm">
+
+                <!-- 1. PILIHAN ISIAN MENU SIOMAY (CHECKBOX - BISA MULTI PILIH) -->
+                <div>
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-comicOrange"></i> Pilihan Isian Menu Siomay (Bisa centang lebih dari 1):
+                    </label>
+                    <div class="grid grid-cols-2 gap-2 bg-peanutCream/50 p-3 rounded-xl border-2 border-comicDark">
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Siomay" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Siomay
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Tahu Coklat" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Tahu Coklat
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Tahu Putih" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Tahu Putih
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Baso" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Baso
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Kol" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Kol
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Kentang" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Kentang
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="isian" value="Pare" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Pare
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 1B. PILIHAN TELUR (HANYA MUNCUL UNTUK HARGA 8K KE ATAS) -->
+                <div id="telur-container" class="hidden">
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-egg text-comicOrange"></i> Pilihan Telur Rebus:
+                    </label>
+                    <div class="bg-yellow-50 p-3 rounded-xl border-2 border-comicDark">
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" id="pake-telur" value="Pakai Telur Rebus" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> 
+                            <span>Pakai Telur Rebus 🥚 (Termasuk Porsi)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 2. PILIHAN BUMBU & KEPEDASAN (CHECKBOX - BISA MULTI PILIH, BISA KOMBINASI TANPA KECAP/TANPA BUMBU) -->
+                <div>
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-comicRed"></i> Pilihan Bumbu & Kepedasan (Bisa centang lebih dari 1):
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-peanutCream/50 p-3 rounded-xl border-2 border-comicDark">
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Bumbu Kacang" checked class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Bumbu Kacang
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Kecap" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Kecap
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Tanpa Saos / Bumbu" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Tanpa Saos / Bumbu
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Pedes Dikit" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Pedes Dikit 🌶️
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Pedes Sedang" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Pedes Sedang 🌶️🌶️
+                        </label>
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" name="bumbu" value="Pedas Ekstra" class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> Pedas Ekstra 🔥🔥🔥
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. TOPPING JERUK NIPIS -->
+                <div>
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-lemon text-green-600"></i> Topping Pelengkap:
+                    </label>
+                    <div class="bg-green-50 p-3 rounded-xl border-2 border-comicDark">
+                        <label class="flex items-center gap-2 font-semibold cursor-pointer">
+                            <input type="checkbox" id="topping-jeruk" value="Jeruk Nipis" checked class="w-4 h-4 accent-comicOrange border-2 border-comicDark rounded"> 
+                            <span>Pakai Jeruk Nipis 🍋 (Penyegar Rasa)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 4. PILIHAN LAYANAN (DELIVERY / TAKE AWAY) -->
+                <!-- 4. PILIHAN LAYANAN (DELIVERY / TAKE AWAY) -->
+<div>
+    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+        <i class="fa-solid fa-motorcycle text-comicOrange"></i> Metode Layanan:
+    </label>
+    <div class="grid grid-cols-2 gap-3">
+        <label class="flex items-center justify-center gap-2 p-3 bg-white border-2 border-comicDark rounded-xl cursor-pointer font-bold hover:bg-comicYellow/30 transition-colors">
+            <!-- Tambahkan onchange di sini -->
+            <input type="radio" name="layanan" value="Take Away (Bungkus Ambil)" checked class="accent-comicOrange" onchange="cekMetodeLayanan(this.value)"> 
+            <span>Take Away</span>
+        </label>
+        <label class="flex items-center justify-center gap-2 p-3 bg-white border-2 border-comicDark rounded-xl cursor-pointer font-bold hover:bg-comicYellow/30 transition-colors">
+            <!-- Tambahkan onchange di sini -->
+            <input type="radio" name="layanan" value="Delivery (Kirim Kurir)" class="accent-comicOrange" onchange="cekMetodeLayanan(this.value)"> 
+            <span>Delivery</span>
+        </label>
+    </div>
+</div>
+
+<!-- KOTAK NOTIFIKASI PERINGATAN BIAYA DELIVER (Otomatis muncul saat Delivery dipilih) -->
+<div id="info-delivery" class="hidden mt-3 p-3 bg-yellow-100 border-2 border-comicDark rounded-xl text-xs sm:text-sm">
+    <p class="font-bold text-comicRed mb-1">⚠️ Catatan Khusus Delivery:</p>
+    <p>Biaya ongkir menyesuaikan jarak pengiriman dari kedai. Silakan kirim <b>Share Lokasi (Shareloc)</b> di WhatsApp setelah tombol kirim diklik agar admin bisa mengecek ongkirnya ya, Kak! 👍</p>
+</div>
+
+                <!-- 4B. KOLOM CATATAN TAMBAHAN (OPSIONAL) -->
+                <div>
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-comicOrange"></i> Catatan Tambahan (Opsional):
+                    </label>
+                    <textarea id="catatan-pesanan" rows="2" placeholder="Contoh: Jangan pakai daun seledri, bumbu kacang dipisah ya kak..." class="w-full p-3 bg-peanutCream/50 border-2 border-comicDark rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-comicOrange"></textarea>
+                </div>
+
+                <!-- 5. JUMLAH PCS / BUNGKUS -->
+                <div>
+                    <label class="block font-bungee text-xs sm:text-sm mb-2 text-comicDark flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-comicOrange"></i> Jumlah Bungkus:
+                    </label>
+                    <div class="flex items-center gap-4 bg-peanutCream/50 p-3 rounded-xl border-2 border-comicDark w-fit">
+                        <button type="button" onclick="adjustQty(-1)" class="w-10 h-10 bg-white border-2 border-comicDark font-bungee rounded-lg shadow-comic-sm hover:bg-comicRed hover:text-white transition-colors">-</button>
+                        <span id="qty-val" class="font-bungee text-xl w-8 text-center">1</span>
+                        <button type="button" onclick="adjustQty(1)" class="w-10 h-10 bg-white border-2 border-comicDark font-bungee rounded-lg shadow-comic-sm hover:bg-comicYellow transition-colors">+</button>
+                    </div>
+                </div>
+
+                <!-- TOMBOL AKSI KUSTOMISASI -->
+                <div class="pt-4 border-t-2 border-comicDark flex flex-col sm:flex-row gap-3">
+                    <button type="button" onclick="addToCartFromModal()" class="comic-btn bg-comicYellow py-3 px-4 rounded-xl flex-1 text-center">
+                        <i class="fa-solid fa-cart-plus mr-2"></i> Masukkan Keranjang
+                    </button>
+                    <button type="button" onclick="directCheckoutFromModal()" class="comic-btn bg-comicOrange text-white py-3 px-4 rounded-xl flex-1 text-center">
+                        <i class="fa-solid fa-bolt mr-2"></i> Lanjut Bayar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL KERANJANG BELANJA ================= -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="comic-card bg-white rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 my-auto relative">
+            
+            <button onclick="closeCartModal()" class="absolute top-4 right-4 w-9 h-9 bg-comicRed text-white rounded-lg border-2 border-comicDark flex items-center justify-center font-bungee text-lg shadow-comic-sm hover:bg-red-600">
+                &times;
+            </button>
+
+            <div class="mb-4 pb-3 border-b-2 border-comicDark flex items-center justify-between">
+                <div>
+                    <h3 class="comic-title text-lg sm:text-xl text-comicDark">Keranjang Pesanan</h3>
+                    <p class="text-xs font-bold text-comicBrown">Daftar pesanan siomay kamu</p>
+                </div>
+                <span class="bg-comicYellow text-xs font-bungee px-2.5 py-1 border-2 border-comicDark rounded-lg" id="cart-item-count">0 Item</span>
+            </div>
+
+            <!-- LIST ITEM DI KERANJANG -->
+            <div id="cart-items-container" class="space-y-3 mb-6 max-h-60 overflow-y-auto pr-1">
+                <div class="text-center py-8 text-gray-500 text-xs sm:text-sm font-semibold">
+                    Keranjang kamu masih kosong nih! Yuk pilih siomay dulu.
+                </div>
+            </div>
+
+            <!-- TOTAL KESELURUHAN -->
+            <div class="bg-peanutCream p-4 rounded-xl border-2 border-comicDark mb-6 flex justify-between items-center">
+                <span class="font-bungee text-xs sm:text-sm">TOTAL KESELURUHAN:</span>
+                <span id="cart-grand-total" class="font-bungee text-lg sm:text-xl text-comicOrange">Rp 0</span>
+            </div>
+
+            <!-- TOMBOL AKSI KERANJANG -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="closeCartModal()" class="comic-btn bg-gray-200 py-3 px-4 rounded-xl text-xs sm:text-sm flex-1">
+                    Pilih Menu Lagi
+                </button>
+                <button onclick="proceedToPayment()" id="btn-proceed-pay" class="comic-btn bg-comicYellow py-3 px-4 rounded-xl text-xs sm:text-sm flex-1 opacity-50 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-credit-card mr-2"></i> Lanjut ke Pembayaran
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL PEMBAYARAN QRIS ================= -->
+    <div id="payment-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="comic-card bg-white rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 my-auto relative text-center">
+            
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 w-9 h-9 bg-comicRed text-white rounded-lg border-2 border-comicDark flex items-center justify-center font-bungee text-lg shadow-comic-sm hover:bg-red-600">
+                &times;
+            </button>
+
+            <div class="mb-4 pb-3 border-b-2 border-comicDark">
+                <span class="bg-comicYellow text-comicDark text-xs font-bungee px-2.5 py-1 border-2 border-comicDark inline-block mb-1">PEMBAYARAN QRIS</span>
+                <h3 class="comic-title text-lg sm:text-xl text-comicDark">Scan QRIS Siomay</h3>
+                <p class="text-xs font-bold text-comicBrown mt-0.5">Silakan scan kode QR di bawah untuk melakukan pembayaran</p>
+            </div>
+
+            <!-- RINGKASAN TAGIHAN -->
+            <div class="bg-peanutCream p-3 rounded-xl border-2 border-comicDark mb-4 flex justify-between items-center">
+                <span class="font-bungee text-xs">TOTAL TAGIHAN:</span>
+                <span id="payment-grand-total" class="font-bungee text-base sm:text-lg text-comicOrange">Rp 0</span>
+            </div>
+
+            <!-- QRIS IMAGE PLACEHOLDER & TOMBOL UNDUH QRIS -->
+            <div class="bg-white p-4 rounded-xl border-3 border-comicDark shadow-comic inline-block mb-4 w-full max-w-[280px]">
+                <!-- Gambar QRIS Toko (Bisa diganti URL QRIS asli toko Anda) -->
+                <img id="qris-image" src="https://i.ibb.co.com/sdB6bWy0/Whats-App-Image-2026-11-03-at-18-33-59.jpg" alt="QRIS Siomay Padjajaran" class="mx-auto w-48 h-48 sm:w-56 sm:h-56 object-contain border-2 border-comicDark rounded-lg mb-3">
+                <p class="font-bungee text-[10px] text-comicDark mb-3">NMID: ID1025467405789</p>
+                
+                <!-- TOMBOL UNDUH QRIS -->
+                <button onclick="downloadQRISImage()" class="comic-btn bg-white hover:bg-gray-100 text-comicDark py-2 px-3 rounded-lg w-full text-xs flex items-center justify-center gap-2 border-2 border-comicDark shadow-comic-sm">
+                    <i class="fa-solid fa-download text-comicOrange"></i> Unduh Gambar QRIS
+                </button>
+            </div>
+
+            <!-- KETERANGAN INSTRUKSI PEMBAYARAN JELAS -->
+            <div class="bg-yellow-50 border-2 border-comicDark p-3 rounded-xl mb-6 text-left">
+                <p class="text-xs font-bold text-comicDark mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-comicOrange"></i> Instruksi Pembayaran:
+                </p>
+                <ol class="text-[11px] sm:text-xs text-gray-700 space-y-1 list-decimal pl-4 font-medium">
+                    <li>Scan QRIS menggunakan Mobile Banking atau E-Wallet (GoPay, OVO, DANA, BCA, dll).</li>
+                    <li>Selesaikan pembayaran sesuai nominal total tagihan.</li>
+                    <li>Klik tombol <b class="text-comicDark">"Saya Sudah Membayar"</b> untuk menampilkan dan mengunduh struk belanja.</li>
+                    <li>Terakhir, klik <b class="text-comicDark">"Kirim Pesan ke Admin"</b> untuk meneruskan pesanan otomatis ke WhatsApp admin beserta bukti transaksi.</li>
+                </ol>
+            </div>
+
+            <!-- TOMBOL SUDAH BAYAR (MEMUNCULKAN STRUK ALA ALFAMART) -->
+            <button onclick="openReceiptModal()" class="comic-btn bg-comicYellow text-comicDark py-3 px-6 rounded-xl w-full text-sm sm:text-base flex items-center justify-center gap-2 shadow-comic mb-3">
+                <i class="fa-solid fa-receipt text-lg text-comicOrange"></i> SAYA SUDAH MEMBAYAR
+            </button>
+
+            <!-- TOMBOL KIRIM PESAN KE ADMIN WHATSAPP -->
+            <button onclick="sendToWhatsApp()" class="comic-btn bg-[#25D366] text-white py-3.5 px-6 rounded-xl w-full text-sm sm:text-base flex items-center justify-center gap-2 shadow-comic">
+                <i class="fa-brands fa-whatsapp text-xl sm:text-2xl"></i> KIRIM PESAN KE ADMIN (WHATSAPP)
+            </button>
+
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL STRUK BELANJA (ALA ALFAMART) ================= -->
+    <div id="receipt-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-xl max-w-sm w-full p-5 sm:p-6 my-auto relative border-4 border-comicDark shadow-comic-lg">
+            
+            <button onclick="closeReceiptModal()" class="absolute top-3 right-3 w-8 h-8 bg-comicRed text-white rounded-lg border-2 border-comicDark flex items-center justify-center font-bungee text-sm shadow-comic-sm">
+                &times;
+            </button>
+
+            <div class="text-center mb-4">
+                <div class="w-12 h-12 bg-comicYellow rounded-full border-2 border-comicDark flex items-center justify-center mx-auto mb-2 shadow-comic-sm">
+                    <span class="text-2xl">🥟</span>
+                </div>
+                <h4 class="font-bungee text-sm sm:text-base text-comicDark">SIOMAY PADJAJARAN</h4>
+                <p class="text-[10px] text-gray-600">Jl. Raya Rajagaluh-Prapatan No. 45, Majalengka</p>
+                <p class="text-[10px] text-gray-600">Telp: 0838-2121-3959</p>
+            </div>
+
+            <!-- KONTEN STRUK THERMAL -->
+            <div id="receipt-print-area" class="thermal-receipt p-3 rounded text-[11px] leading-tight mb-4 space-y-2">
+                <div class="text-center border-b border-dashed border-gray-400 pb-2">
+                    <p class="font-bold">*** BUKTI PEMBAYARAN LUNAS ***</p>
+                    <p id="receipt-trx-id">No. Transaksi: SP-884920</p>
+                    <p id="receipt-datetime">Tgl: 03/06/2026 14:30</p>
+                </div>
+                <div id="receipt-items-list" class="border-b border-dashed border-gray-400 pb-2 space-y-1">
+                    <!-- Dinamis terisi dari pesanan -->
+                </div>
+                <div class="space-y-1 pt-1 font-bold">
+                    <div class="flex justify-between">
+                        <span>TOTAL BAYAR (QRIS):</span>
+                        <span id="receipt-total">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between text-green-700">
+                        <span>STATUS:</span>
+                        <span>LUNAS (VERIFIED)</span>
+                    </div>
+                </div>
+                <div class="text-center pt-2 border-t border-dashed border-gray-400 text-[10px] text-gray-600">
+                    <p>Terima Kasih Telah Berbelanja!</p>
+                    <p>Simpan struk ini sebagai bukti pengambilan.</p>
+                </div>
+            </div>
+
+            <!-- TOMBOL AKSI STRUK -->
+            <div class="flex gap-2">
+                <button onclick="downloadReceiptImage()" class="comic-btn bg-comicYellow py-2.5 px-3 rounded-lg text-xs flex-1 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> Unduh Struk
+                </button>
+                <button onclick="closeReceiptModal()" class="comic-btn bg-gray-200 py-2.5 px-3 rounded-lg text-xs flex-1">
+                    Tutup
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Variabel Status Global Aplikasi
+        let cart = []; // Menyimpan daftar item pesanan keranjang
+        let currentSelectedCatalog = {
+            price: 5000,
+            porsiName: 'Porsi Kecil'
+        };
+        let currentQty = 1; // Jumlah pcs/bungkus default
+
+        // Nomor WhatsApp Admin Toko (Silakan ganti dengan nomor WA aktif Anda, misal: 628xxxxxxxxxx)
+        const ADMIN_WHATSAPP_NUMBER = "6283821213959";
+
+        // Hilangkan layar loading setelah 1.2 detik saat halaman pertama kali dimuat
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1200);
+        });
+
+        // Fungsi helper untuk menampilkan notifikasi toast melayang di pojok kanan atas
+        function showToast(message, icon = '🔥') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMsg.innerText = message;
+            toastIcon.innerText = icon;
+            
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                toast.style.transform = 'translateY(-200%)';
+            }, 2500);
+        }
+
+        // Membuka modal kustomisasi saat salah satu card katalog diklik
+        function openCustomModal(price, porsiName) {
+            currentSelectedCatalog = { price, porsiName };
+            currentQty = 1;
+            document.getElementById('qty-val').innerText = currentQty;
+
+            // Perbarui header modal sesuai porsi yang diklik
+            document.getElementById('modal-porsi-badge').innerText = porsiName.toUpperCase();
+            document.getElementById('modal-title').innerText = `Kustomisasi ${porsiName}`;
+            document.getElementById('modal-price-desc').innerText = `Harga Dasar: Rp ${price.toLocaleString('id-ID')}`;
+
+            // Reset formulir modal
+            document.getElementById('custom-form').reset();
+            
+            // Set nilai bawaan (default)
+            document.querySelectorAll('input[name="bumbu"]').forEach(cb => {
+                if(cb.value === 'Bumbu Kacang') cb.checked = true;
+                else cb.checked = false;
+            });
+            document.querySelector('input[name="layanan"][value="Take Away (Bungkus Ambil)"]').checked = true;
+            document.getElementById('topping-jeruk').checked = true;
+            document.getElementById('qty-val').innerText = currentQty;
+
+            // Logika Kondisional Telur: HANYA MUNCUL JIKA HARGA >= 8K
+            const telurContainer = document.getElementById('telur-container');
+            if (price >= 8000) {
+                telurContainer.classList.remove('hidden');
+            } else {
+                telurContainer.classList.add('hidden');
+                document.getElementById('pake-telur').checked = false;
+            }
+
+            // Tampilkan modal kustomisasi
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Menutup modal kustomisasi
+        function closeCustomModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Menyesuaikan jumlah pcs/bungkus di modal
+        function adjustQty(change) {
+            currentQty += change;
+            if (currentQty < 1) currentQty = 1;
+            document.getElementById('qty-val').innerText = currentQty;
+        }
+
+        // Mengambil data dari isian form kustomisasi modal
+        function getModalFormData() {
+            // Mengambil semua isian siomay yang dicentang (bisa lebih dari satu)
+            const isianCheckboxes = document.querySelectorAll('input[name="isian"]:checked');
+            let isianList = Array.from(isianCheckboxes).map(cb => cb.value);
+            if (isianList.length === 0) {
+                isianList = ['Mix Standard Siomay'];
+            }
+
+            // Mengambil semua bumbu & saus yang dicentang (bisa lebih dari satu, misal: bumbu kacang + tanpa kecap)
+            const bumbuCheckboxes = document.querySelectorAll('input[name="bumbu"]:checked');
+            let bumbuList = Array.from(bumbuCheckboxes).map(cb => cb.value);
+            if (bumbuList.length === 0) {
+                bumbuList = ['Bumbu Kacang Standar'];
+            }
+
+            // Mengambil status telur (jika tersedia dan dicentang)
+            let pakeTelur = false;
+            const telurElem = document.getElementById('pake-telur');
+            if (telurElem && !telurElem.parentElement.parentElement.classList.contains('hidden')) {
+                pakeTelur = telurElem.checked;
+            }
+
+            // Mengambil status topping jeruk nipis
+            const pakeJeruk = document.getElementById('topping-jeruk').checked;
+
+            // Mengambil metode layanan (Delivery / Take Away)
+            const layananSelected = document.querySelector('input[name="layanan"]:checked');
+            const layananValue = layananSelected ? layananSelected.value : 'Take Away';
+
+            // Mengambil catatan tambahan opsional
+            const catatanValue = document.getElementById('catatan-pesanan').value.trim();
+
+            const subtotal = currentSelectedCatalog.price * currentQty;
+
+            return {
+                porsiName: currentSelectedCatalog.porsiName,
+                basePrice: currentSelectedCatalog.price,
+                isian: isianList,
+                bumbu: bumbuList,
+                pakeTelur: pakeTelur,
+                pakeJeruk: pakeJeruk,
+                layanan: layananValue,
+                catatan: catatanValue,
+                qty: currentQty,
+                subtotal: subtotal
+            };
+        }
+
+        // Tombol "Masukkan Keranjang": Menyimpan pesanan dan menutup modal
+        function addToCartFromModal() {
+            const orderItem = getModalFormData();
+            cart.push(orderItem);
+            updateCartBadge();
+            closeCustomModal();
+            showToast('Pesanan berhasil dimasukkan keranjang!', '🛒');
+        }
+
+        // Tombol langsung lanjut bayar dari modal kustomisasi
+        function directCheckoutFromModal() {
+            const orderItem = getModalFormData();
+            cart.push(orderItem);
+            updateCartBadge();
+            closeCustomModal();
+            openCartModal();
+        }
+
+        // Memperbarui badge jumlah item di keranjang pada header
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.innerText = totalItems;
+        }
+
+        // Membuka modal keranjang belanja
+        function openCartModal() {
+            renderCartItems();
+            const modal = document.getElementById('cart-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Menutup modal keranjang belanja
+        function closeCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Merender daftar item di dalam modal keranjang
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const countLabel = document.getElementById('cart-item-count');
+            const grandTotalElem = document.getElementById('cart-grand-total');
+            const btnProceed = document.getElementById('btn-proceed-pay');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            countLabel.innerText = `${totalItems} Item`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 text-xs sm:text-sm font-semibold">
+                        Keranjang kamu masih kosong nih! Yuk pilih siomay dulu.
+                    </div>
+                `;
+                grandTotalElem.innerText = 'Rp 0';
+                btnProceed.disabled = true;
+                btnProceed.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            btnProceed.disabled = false;
+            btnProceed.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            let html = '';
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                grandTotal += item.subtotal;
+                html += `
+                    <div class="bg-peanutCream/40 border-2 border-comicDark p-3 rounded-xl relative text-xs sm:text-sm">
+                        <button onclick="removeCartItem(${index})" class="absolute top-2.5 right-2.5 text-comicRed hover:text-red-700 font-bold text-sm bg-white w-6 h-6 rounded border border-comicDark flex items-center justify-center">
+                            &times;
+                        </button>
+                        <div class="pr-6">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bungee text-xs sm:text-sm text-comicDark">${item.porsiName} (Rp ${item.basePrice.toLocaleString('id-ID')})</span>
+                                <span class="font-bold text-[10px] sm:text-xs bg-comicYellow px-2 py-0.5 rounded border border-comicDark">x${item.qty}</span>
+                            </div>
+                            <p class="text-[11px] sm:text-xs text-gray-700 mb-1"><b>Isian:</b> ${item.isian.join(', ')}</p>
+                            <p class="text-[11px] sm:text-xs text-gray-700 mb-1"><b>Bumbu:</b> ${item.bumbu.join(', ')} ${item.pakeTelur ? '| 🥚 Telur' : ''} ${item.pakeJeruk ? '| 🍋 Jeruk' : ''}</p>
+                            <p class="text-[11px] sm:text-xs text-comicBrown font-semibold mb-1"><b>Layanan:</b> ${item.layanan}</p>
+                            ${item.catatan ? `<p class="text-[11px] sm:text-xs text-gray-600 italic mb-1"><b>Catatan:</b> "${item.catatan}"</p>` : ''}
+                            <div class="flex justify-between items-center pt-2 border-t border-comicDark/20">
+                                <span class="text-[11px] font-bold">Subtotal:</span>
+                                <span class="font-bungee text-comicOrange text-xs sm:text-sm">Rp ${item.subtotal.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            grandTotalElem.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        }
+
+        // Menghapus item tertentu dari keranjang
+        function removeCartItem(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderCartItems();
+            showToast('Item dihapus dari keranjang', '🗑️');
+        }
+
+        // Melanjutkan dari keranjang ke halaman pembayaran QRIS
+        function proceedToPayment() {
+            closeCartModal();
+            const grandTotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
+            document.getElementById('payment-grand-total').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+            const modal = document.getElementById('payment-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Menutup modal pembayaran QRIS
+        function closePaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Fitur Unduh Gambar QRIS
+        function downloadQRISImage() {
+            const qrisImg = document.getElementById('qris-image');
+            const link = document.createElement('a');
+            link.href = qrisImg.src;
+            link.download = 'QRIS-Siomay-Padjajaran.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Gambar QRIS berhasil diunduh!', '📥');
+        }
+
+        // Membuka modal struk belanja ala Alfamart ketika tombol "Saya Sudah Membayar" diklik
+        function openReceiptModal() {
+            if (cart.length === 0) return;
+
+            // Generate nomor transaksi unik acak
+            const randomTrx = 'SP-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('receipt-trx-id').innerText = `No. Transaksi: ${randomTrx}`;
+
+            // Tanggal dan waktu sekarang
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('receipt-datetime').innerText = `Tgl: ${formattedDate}`;
+
+            // Render list item ke dalam area struk
+            let receiptItemsHtml = '';
+            let grandTotal = 0;
+
+            cart.forEach((item) => {
+                grandTotal += item.subtotal;
+                receiptItemsHtml += `
+                    <div>
+                        <div class="flex justify-between font-bold">
+                            <span>${item.qty}x ${item.porsiName}</span>
+                            <span>Rp ${item.subtotal.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="text-[10px] text-gray-600 pl-2">
+                            - Isian: ${item.isian.join(', ')}<br>
+                            - Bumbu: ${item.bumbu.join(', ')} ${item.pakeTelur ? '+ Telur' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('receipt-items-list').innerHTML = receiptItemsHtml;
+            document.getElementById('receipt-total').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+            // Tampilkan modal struk
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Menutup modal struk belanja
+        function closeReceiptModal() {
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Fitur unduh struk belanja sebagai teks / file catatan
+        function downloadReceiptImage() {
+            const receiptArea = document.getElementById('receipt-print-area').innerText;
+            const blob = new Blob([receiptArea], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Struk-Pembayaran-Siomay-Padjajaran.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Struk belanja berhasil diunduh!', '🧾');
+        }
+
+        // Mengirimkan pesan format lengkap ke WhatsApp Admin
+        function sendToWhatsApp() {
+            if (cart.length === 0) return;
+
+            let grandTotal = 0;
+            let text = `Halo Admin Siomay Padjajaran! 🥟\nSaya sudah melakukan pembayaran via QRIS. Berikut detail pesanan saya:\n\n`;
+
+            cart.forEach((item, idx) => {
+                grandTotal += item.subtotal;
+                text += `*Pesanan #${idx + 1} (${item.porsiName})*\n`;
+                text += `- Harga: Rp ${item.basePrice.toLocaleString('id-ID')}\n`;
+                text += `- Jumlah: ${item.qty} bungkus\n`;
+                text += `- Isian: ${item.isian.join(', ')}\n`;
+                text += `- Bumbu: ${item.bumbu.join(', ')}\n`;
+                text += `- Telur: ${item.pakeTelur ? 'Ya (Pakai Telur Rebus)' : 'Tidak'}\n`;
+                text += `- Jeruk Nipis: ${item.pakeJeruk ? 'Ya' : 'Tidak'}\n`;
+                text += `- Layanan: ${item.layanan}\n`;
+                if (item.catatan) {
+                    text += `- Catatan: ${item.catatan}\n`;
+                }
+                text += `- Subtotal: Rp ${item.subtotal.toLocaleString('id-ID')}\n\n`;
+            });
+
+            text += `*TOTAL KESELURUHAN: Rp ${grandTotal.toLocaleString('id-ID')}*\n\n`;
+            text += `Berikut saya lampirkan bukti transfer pembayarannya. Mohon segera diproses ya kak, terima kasih! 🙏`;
+
+            const encodedText = encodeURIComponent(text);
+            const waUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodedText}`;
+
+            // Buka WhatsApp di tab baru
+            window.open(waUrl, '_blank');
+        }
+
+        // Fungsi untuk memunculkan atau menyembunyikan peringatan delivery
+function cekMetodeLayanan(nilai) {
+    const kotakInfo = document.getElementById('info-delivery');
+    if (nilai.includes("Delivery")) {
+        kotakInfo.classList.remove('hidden');
+    } else {
+        kotakInfo.classList.add('hidden');
+    }
+}
+    </script>
+</body>
+</html>
